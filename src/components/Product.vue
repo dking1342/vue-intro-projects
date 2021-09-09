@@ -43,8 +43,8 @@
 
 <script>
 import { ref } from "@vue/reactivity";
-import { onMounted, watch, watchEffect } from "@vue/runtime-core";
-import { useRoute } from "vue-router";
+import { onMounted, watchEffect } from "@vue/runtime-core";
+import { useRoute, useRouter } from "vue-router";
 
 export default {
   name: "Product",
@@ -53,6 +53,7 @@ export default {
     let error = ref(null);
     let loading = ref(false);
     let route = useRoute();
+    let router = useRouter();
     let quantity = ref(1);
     let totalCost = ref(0);
 
@@ -71,16 +72,14 @@ export default {
       getProduct(route.params.id);
     });
 
-    watch(getProduct, () => {
-      if (localStorage.getItem("checkout")) {
-        let pendingCheckoutItems = JSON.parse(localStorage.getItem("checkout"));
-        let filteredItem = pendingCheckoutItems.filter(
-          (item) => item.id === product.value.id
-        );
-
-        console.log(filteredItem[0]);
-      }
-    });
+    // watch(getProduct, () => {
+    //   if (localStorage.getItem("checkout")) {
+    //     let pendingCheckoutItems = JSON.parse(localStorage.getItem("checkout"));
+    //     let filteredItem = pendingCheckoutItems.filter(
+    //       (item) => item.id === product.value.id
+    //     );
+    //   }
+    // });
 
     const stopEffect = watchEffect(() => {
       if (Object.values(product.value).length) {
@@ -109,6 +108,7 @@ export default {
       } else {
         localStorage.setItem("checkout", JSON.stringify([checkoutItem]));
       }
+      router.push("/cart");
     };
 
     return {
