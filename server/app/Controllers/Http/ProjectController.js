@@ -9,7 +9,19 @@ class ProjectController {
             const user = await auth.getUser();
             return await user.projects().fetch();            
         } catch (error) {
-            return { message: error.message }
+            return { error: error.message }
+        }
+    }
+
+    async show({ auth, params, response }) {
+        try {
+            const user = await auth.getUser();
+            const { id } = params;
+            const project = await Project.find(id);
+            AuthorizationService.verifyPermission(project, user, response);
+            return project;
+        } catch (error) {
+            return { error: error.message }
         }
     }
 
@@ -24,7 +36,7 @@ class ProjectController {
             await user.projects().save(project);
             return project;
         } catch (error) {
-            return { message: error.message };
+            return { error: error.message };
         }
     }
 
@@ -36,13 +48,23 @@ class ProjectController {
             AuthorizationService.verifyPermission(project,user,response);
             await project.delete();
             return project;
-
         } catch (error) {
-            console.log(error)
-            return { message: error.message }            
+            return { error: error.message }            
         }
+    }
 
-
+    async update({ auth, request, params, response }) {
+        try {
+            const user = await auth.getUser();
+            const { id } = params;
+            const project = await Project.find(id);
+            AuthorizationService.verifyPermission(project,user,response);
+            project.merge(request.only('title'));
+            await project.save();
+            return project;
+        } catch (error) {
+            return { error: error.message}
+        }
     }
 }
 
