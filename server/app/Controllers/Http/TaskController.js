@@ -5,7 +5,7 @@ const Project = use('App/Models/Project');
 const AuthorizationService = use('App/Services/AuthorizationService');
 
 class TaskController {
-    async index({ auth, params, request, response }) {
+    async index({ auth, params, response }) {
         try {
             const user = await auth.getUser();
             const { id } = params;
@@ -31,6 +31,35 @@ class TaskController {
             return task;
         } catch (error) {
             return { error: error.message };
+        }
+    }
+
+    async destroy({ auth, params, response }) {
+        try {
+            const user = await auth.getUser();
+            const { id } = params;
+            const task = await Task.find(id);
+            const project = await task.project().fetch();
+            AuthorizationService.verifyPermission(project,user,response);
+            await task.delete();
+            return task;
+        } catch (error) {
+            return { error: error.message }            
+        }
+    }
+
+    async update({ auth, request, params, response }) {
+        try {
+            const user = await auth.getUser();
+            const { id } = params;
+            const task = await Task.find(id);
+            const project = await task.project().fetch();
+            AuthorizationService.verifyPermission(project,user,response);
+            task.merge(request.only(['description','completed']));
+            await task.save();
+            return task;
+        } catch (error) {
+            return { error: error.message}
         }
     }
 
