@@ -3,6 +3,7 @@ import Home from '../views/Home.vue';
 import Register from '../views/Register.vue';
 import Login from '../views/Login.vue';
 import Projects from '../views/Projects.vue';
+import Modify from '../views/Modify.vue';
 
 const routes = [
   {
@@ -24,6 +25,11 @@ const routes = [
     path: '/projects',
     name: 'Projects',
     component: Projects,
+  },
+  {
+    path: '/modify/:action/:type/:id',
+    name: 'Modify',
+    component: Modify,
   },
 ];
 

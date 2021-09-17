@@ -52,6 +52,7 @@ nav {
   background-color: #f4f4f4;
   padding: 0 10px;
   box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
+  z-index: 5;
 }
 nav a {
   width: 100%;
