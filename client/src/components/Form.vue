@@ -22,6 +22,12 @@
       <div class="form-control submit">
         <input type="submit" :value="type" />
       </div>
+      <div class="form-control" v-if="type === 'Login'">
+        <router-link to="/register">Not a user?</router-link>
+      </div>
+      <div class="form-control" v-if="type === 'Register'">
+        <router-link to="/login">Already registered?</router-link>
+      </div>
     </form>
   </div>
 </template>
